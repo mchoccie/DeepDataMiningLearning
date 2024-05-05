@@ -114,7 +114,6 @@ def _coco_remove_images_without_annotations(dataset, cat_list=None):
             anno = [obj for obj in anno if obj["category_id"] in cat_list]
         if _has_valid_annotation(anno):
             ids.append(ds_idx)
-
     dataset = torch.utils.data.Subset(dataset, ids)
     return dataset
 
@@ -190,7 +189,9 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         self._transforms = transforms
 
     def __getitem__(self, idx):
+        #print(idx)
         img, target = super().__getitem__(idx)
+        
         image_id = self.ids[idx] #list(sorted(self.coco.imgs.keys()))
         target = dict(image_id=image_id, annotations=target)
         if self._transforms is not None:
@@ -201,15 +202,16 @@ class CocoDetection(torchvision.datasets.CocoDetection):
 def get_coco(root, image_set, transforms, mode="instances", use_v2=False, with_masks=False):
     anno_file_template = "{}_{}2017.json"
     PATHS = {
-        "train": ("train2017", os.path.join("annotations", anno_file_template.format(mode, "train"))),
-        "val": ("val2017", os.path.join("annotations", anno_file_template.format(mode, "val"))),
+        "train": ("images", os.path.join("annotations", anno_file_template.format(mode, "train"))),
+        "val": ("images", os.path.join("annotations", anno_file_template.format(mode, "val"))),
         # "train": ("val2017", os.path.join("annotations", anno_file_template.format(mode, "val")))
     }
 
     img_folder, ann_file = PATHS[image_set]
     img_folder = os.path.join(root, img_folder)
+    #print("---------------" + str(img_folder))
     ann_file = os.path.join(root, ann_file)
-
+    #print("---------------annfile" + str(ann_file))
     if use_v2:
         from torchvision.datasets import wrap_dataset_for_transforms_v2
 

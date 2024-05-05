@@ -44,8 +44,8 @@ def get_args_parser(add_help=True):
 
     parser = argparse.ArgumentParser(description="PyTorch Detection Training", add_help=add_help)
 
-    parser.add_argument("--data-path", default="/data/cmpe249-fa23/waymotrain200cocoyolo/", type=str, help="dataset path") #/data/cmpe249-fa23/waymotrain200cocoyolo/, /data/cmpe249-fa23/coco/
-    parser.add_argument("--annotationfile", default="", type=str, help="dataset annotion file path, e.g., coco json file")
+    parser.add_argument("--data-path", default="C:/Users/manan/Downloads/coco2017/coco2017", type=str, help="dataset path") #/data/cmpe249-fa23/waymotrain200cocoyolo/, /data/cmpe249-fa23/coco/
+    parser.add_argument("--annotationfile", default="C:/Users/manan/Downloads/coco2017/coco2017/annotations/instances_train2017.json", type=str, help="dataset annotion file path, e.g., coco json file")
     parser.add_argument(
         "--dataset",
         default="yolo", 
@@ -56,7 +56,7 @@ def get_args_parser(add_help=True):
     parser.add_argument("--scale", default="x", type=str, help="model scale: n, x") 
     parser.add_argument("--ckpt", default="/data/cmpe249-fa23/modelzoo/yolov8x_statedicts.pt", type=str, help="model name") #"/data/cmpe249-fa23/modelzoo/yolov8n_statedicts.pt"
     parser.add_argument("--trainable", default=0, type=int, help="number of trainable layers (sequence) of backbone")
-    parser.add_argument("--device", default="cuda:3", type=str, help="device (Use cuda or cpu Default: cuda)")
+    parser.add_argument("--device", default="cpu", type=str, help="device (Use cuda or cpu Default: cuda)")
     parser.add_argument(
         "-b", "--batch-size", default=16, type=int, help="images per gpu, the total batch size is $NGPU x batch_size"
     )

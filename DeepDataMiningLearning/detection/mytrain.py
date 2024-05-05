@@ -44,21 +44,21 @@ def get_args_parser(add_help=True):
 
     parser = argparse.ArgumentParser(description="PyTorch Detection Training", add_help=add_help)
 
-    parser.add_argument("--data-path", default="/data/cmpe249-fa23/WaymoCOCO/", type=str, help="dataset path") #"/data/cmpe249-fa23/WaymoCOCO/"
-    parser.add_argument("--annotationfile", default="", type=str, help="dataset annotion file path, e.g., coco json file") #annotations_train200new.json
+    parser.add_argument("--data-path", default="C:\DeepDataMiningLearning\data", type=str, help="dataset path") #"/data/cmpe249-fa23/WaymoCOCO/"
+    parser.add_argument("--annotationfile", default="C:\DeepDataMiningLearning\data\annotations\instances_minitrain2017.json", type=str, help="dataset annotion file path, e.g., coco json file") #annotations_train200new.json
     parser.add_argument(
         "--dataset",
         default="coco", #waymococo
         type=str,
         help="dataset name. Use coco for object detection and instance segmentation and coco_kp for Keypoint detection",
     )
-    parser.add_argument("--model", default="customrcnn_resnet152", type=str, help="model name") #customrcnn_resnet152, fasterrcnn_resnet50_fpn_v2
+    parser.add_argument("--model", default="fasterrcnn_resnet50_fpn_v2", type=str, help="model name") #customrcnn_resnet152, fasterrcnn_resnet50_fpn_v2
     parser.add_argument("--trainable", default=0, type=int, help="number of trainable layers (sequence) of backbone")
-    parser.add_argument("--device", default="cuda", type=str, help="device (Use cuda or cpu Default: cuda)")
+    parser.add_argument("--device", default="cpu", type=str, help="device (Use cuda or cpu Default: cuda)")
     parser.add_argument(
-        "-b", "--batch-size", default=16, type=int, help="images per gpu, the total batch size is $NGPU x batch_size"
+        "-b", "--batch-size", default=5, type=int, help="images per gpu, the total batch size is $NGPU x batch_size"
     )
-    parser.add_argument("--epochs", default=60, type=int, metavar="N", help="number of total epochs to run")
+    parser.add_argument("--epochs", default=3, type=int, metavar="N", help="number of total epochs to run")
     parser.add_argument("--saveeveryepoch", default=4, type=int, metavar="N", help="number of epochs to save")
     parser.add_argument(
         "-j", "--workers", default=4, type=int, metavar="N", help="number of data loading workers (default: 4)"
@@ -363,3 +363,4 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, sc
 if __name__ == "__main__":
     args = get_args_parser().parse_args()
     main(args)
+

@@ -150,6 +150,7 @@ class DetectionPresetEval:
 
 def get_dataset(datasetname, is_train, is_val, args):
     if datasetname.lower() == 'coco':
+        print("----------" + str(args))
         ds, num_classes = get_cocodataset(is_train, is_val, args)
     elif datasetname.lower() == 'kitti':
         ds, num_classes = get_kittidataset(is_train, is_val, args)
@@ -220,8 +221,8 @@ import yaml
 from DeepDataMiningLearning.detection.dataset_yolo import YOLODataset
 def get_yolodataset(is_train, is_val, args):
     rootPath=args.data_path #'/data/cmpe249-fa23/coco/'
-    #annotation=args.annotationfile #'/data/cmpe249-fa23/coco/train2017.txt'
-    dataset_cfgfile = './DeepDataMiningLearning/detection/dataset.yaml'
+    annotation=args.annotationfile #'/data/cmpe249-fa23/coco/train2017.txt'
+    dataset_cfgfile = 'C:\DeepDataMiningLearning\DeepDataMiningLearning\detection\dataset.yaml'
     with open(dataset_cfgfile, errors='ignore', encoding='utf-8') as f:
         s = f.read()  # string
         data = yaml.safe_load(s) or {}  # always return a dict (yaml.safe_load() may return None for empty files)
@@ -236,10 +237,10 @@ def get_yolodataset(is_train, is_val, args):
             annotation = os.path.join(rootPath, 'images_val.txt')
         yolodataset = YOLODataset(root=rootPath, annotation=annotation, train=False, transform=None, data=data,classes=None,use_segments=False,use_keypoints=False)
     else: #training
-        if pathsplits[-1].endswith('coco'):
-            annotation = os.path.join(rootPath, 'train2017.txt')
-        else:
-            annotation = os.path.join(rootPath, 'images_train.txt')
+        # if pathsplits[-1].endswith('coco'):
+        #     annotation = os.path.join(rootPath, 'train2017.txt')
+        # else:
+        #     annotation = os.path.join(rootPath, 'images_train.txt')
         yolodataset = YOLODataset(root=rootPath, annotation=annotation, train=is_train, transform=None, data=data,classes=None,use_segments=False,use_keypoints=False)
     num_classes = yolodataset.numclass
     return yolodataset, num_classes

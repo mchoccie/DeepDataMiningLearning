@@ -28,6 +28,7 @@ def get_torchvision_detection_models(modelname, box_score_thresh=0.9):
 
 def modify_fasterrcnnheader(model, num_classes, freeze=True):
     if freeze == True:
+        print("WE ARE HERE BRO")
         for p in model.parameters():
             p.requires_grad = False
     # replace the classifier with a new one, that has
@@ -98,6 +99,16 @@ def create_testdata():
         d['labels'] = labels[i]
         targets.append(d)
     return images, targets
+
+
+def freeze_layers(model, num_layers_to_freeze):
+    parameters = model.parameters()
+    for i, param in enumerate(parameters):
+        print(i)
+        if i < num_layers_to_freeze:
+            param.requires_grad = False
+        else:
+            break
 
 #Pass
 def test_defaultmodels():
@@ -174,7 +185,7 @@ def load_checkpoint(model, ckpt_file, fp16=False):
     model.half() if fp16 else model.float()
     return model
 
-def create_detectionmodel(modelname, num_classes=None, trainable_layers=0, ckpt_file = None, fp16=False, device= 'cuda:0', scale='n'):
+def create_detectionmodel(modelname, num_classes=None, trainable_layers=0, ckpt_file = None, fp16=False, device= 'cpu', scale='n'):
     model = None
     preprocess = None
     classes = None
@@ -182,14 +193,20 @@ def create_detectionmodel(modelname, num_classes=None, trainable_layers=0, ckpt_
         freezemodel = True
     if modelname == 'fasterrcnn_resnet50_fpn_v2':
         model, preprocess, weights, classes = get_torchvision_detection_models(modelname)
-        if num_classes is not None and len(classes) != num_classes:
-            model = modify_fasterrcnnheader(model, num_classes, freeze=freezemodel)
+        print("___-------------------" + str(num_classes))
+        print("___-------------------" + str(freezemodel))
+        ## I CHANGED THIS SHIT it was len(classes) != num_classes
+        if num_classes is not None and len(classes) == num_classes:
+            
+            model = modify_fasterrcnnheader(model, num_classes, freeze=False)
+            
         if ckpt_file:
             model = load_checkpoint(model, ckpt_file, fp16)
     elif modelname.startswith('customrcnn'):
         x = modelname.split("_")
         if x[0]== 'customrcnn' and x[1].startswith('resnet'):
             backbonename = x[1]
+            print("we're here bro")
             model=CustomRCNN(backbone_modulename=backbonename,trainable_layers=trainable_layers,num_classes=num_classes,out_channels=256,min_size=800,max_size=1333)
             if ckpt_file:
                 model = load_checkpoint(model, ckpt_file, fp16)
@@ -203,6 +220,8 @@ def create_detectionmodel(modelname, num_classes=None, trainable_layers=0, ckpt_
         print('Model name not supported')
 
     if model:
+        print(type(model))
+        freeze_layers(model, 170)
         summary(model=model, 
             input_size=(32, 3, 224, 224), # make sure this is "input_size", not "input_shape"
             # col_names=["input_size"], # uncomment for smaller output
